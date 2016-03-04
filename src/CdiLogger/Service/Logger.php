@@ -1,45 +1,103 @@
 <?php
-
 namespace CdiLogger\Service;
-
-use Zend\ServiceManager\ServiceManagerAwareInterface;
-
+use Zend\Log\Logger as ZendLogger;
+use Zend\Authentication\AuthenticationService;
+use Zend\Http\PhpEnvironment\Request;
 /**
- * TITLE
- *
- * Description
- *
- * @author Cristian Incarnato <cristian.cdi@gmail.com>
- *
- * @package Paquete
+ * Class Log
+ * @package CdiLogger\Service\Log
  */
-class Logger implements ServiceManagerAwareInterface {
-
+class Logger extends ZendLogger
+{
     /**
-     * @var ServiceManager
+     * @var AuthenticationService
      */
-    protected $serviceManager;
-
-    
-
+    private $authenticationService;
     /**
-     * Retrieve service manager instance
+     * @var Request
+     */
+    private $request;
+    /**
+     * @var array
+     */
+    private $customExtra = array();
+    /**
+     * @param int   $priority
+     * @param mixed $message
+     * @param array $extra
      *
-     * @return ServiceManager
+     * @return ZendLogger
      */
-    public function getServiceManager() {
-        return $this->serviceManager;
+    final public function log($priority, $message, $extra = array())
+    {
+        $customExtra = array(
+            'Zf2Logger' => array(
+                'sessionId' => session_id(),
+                'host'      => !empty($_SERVER['HTTP_HOST']) ? $_SERVER['HTTP_HOST'] : 'CLI',
+                'ip'        => !empty($_SERVER['REMOTE_ADDR']) ? $_SERVER['REMOTE_ADDR'] : 'unavailable'
+            )
+        );
+        return parent::log($priority, $message, array_merge($extra, $customExtra, $this->customExtra));
     }
-
     /**
-     * Set service manager instance
+     * @param AuthenticationService $authenticationService
      *
-     * @param ServiceManager $serviceManager
-     * @return User
+     * @return Logger
      */
-    public function setServiceManager(\Zend\ServiceManager\ServiceManager $serviceManager) {
-        $this->serviceManager = $serviceManager;
+    public function setAuthenticationService(AuthenticationService $authenticationService)
+    {
+        $this->authenticationService = $authenticationService;
         return $this;
     }
-
+    /**
+     * @return AuthenticationService
+     */
+    public function getAuthenticationService()
+    {
+        return $this->authenticationService;
+    }
+    /**
+     * @param Request $request
+     *
+     * @return Logger
+     */
+    public function setRequest(Request $request)
+    {
+        $this->request = $request;
+        return $this;
+    }
+    /**
+     * @return Request Request
+     */
+    public function getRequest()
+    {
+        return $this->request;
+    }
+    /**
+     * @param array $customExtra
+     *
+     * @return Logger
+     */
+    public function setCustomExtra(array $customExtra)
+    {
+        $this->customExtra = $customExtra;
+        return $this;
+    }
+    /**
+     * @param array $customExtra
+     *
+     * @return Logger
+     */
+    public function addCustomExtra(array $customExtra)
+    {
+        $this->customExtra[] = $customExtra;
+        return $this;
+    }
+    /**
+     * @return array
+     */
+    public function getCustomExtra()
+    {
+        return $this->customExtra;
+    }
 }
