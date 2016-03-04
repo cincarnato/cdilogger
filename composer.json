@@ -1,0 +1,41 @@
+{
+    "name":        "cdi/cdilogger",
+    "description": "Zend Framework 2 Module that provides a logger",
+    "type":        "library",
+    "license":     "WTFPL",
+    "keywords": [
+        "logger",
+        "doctrine",
+        "zf2",
+        "log",
+        "Zend Framework",
+         "Zend Framework 2"
+    ],
+    
+    "authors": [{
+        "name": "Cristian Incarnato",
+        "email": "cristian.cdi@gmail.com"
+    }],
+    
+    "minimum-stability": "dev",
+    
+    "config": {
+    	"process-timeout": 5000
+    },
+
+    "require": {
+        "php": ">=5.3.3"
+    },
+    "require-dev": {
+        "zendframework/zendframework": "~2.2",
+    },
+
+    "autoload": {
+        "psr-0": {
+            "CdiLogger\\": "src/"
+        },
+         "classmap": [
+            "./Module.php"
+            ]
+    }
+}
