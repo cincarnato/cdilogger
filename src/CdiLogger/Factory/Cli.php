@@ -22,7 +22,7 @@ class Cli {
      * @param ServiceLocatorInterface $serviceLocator
      * @return \Zend\Http\Client
      */
-    public static function createService(array $config) {
+    public function createService(array $config) {
         $this->logger = new Logger();
         $this->configuration($config);
         $this->writerCollection($config);
@@ -42,6 +42,11 @@ class Cli {
                 if ($writer['enabled']) {
                     $this->writerAdapter($writer);
                     $writers ++;
+                    
+                      if ($writer['rotate']) {
+                          $this->logger->addRotator($writer);
+                      }
+                    
                 }
             }
             return $writers;

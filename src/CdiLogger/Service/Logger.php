@@ -33,6 +33,17 @@ class Logger extends ZendLogger {
     private $optionalExtra = true;
 
     /**
+     * @var 
+     */
+    private $rotates;
+    
+    
+    public function addRotator($writer){
+        $this->rotates[] = $writer;
+    }
+    
+
+    /**
      * @param int   $priority
      * @param mixed $message
      * @param array $extra
