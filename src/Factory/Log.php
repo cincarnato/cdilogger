@@ -3,7 +3,7 @@ namespace CdiLogger\Factory;
 use Zend\ServiceManager\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
 use Zend\Log\Filter\Priority;
-use CdiLogger\Service\Logger;
+use CdiLogger\Log;
 
 
 class Log implements FactoryInterface
@@ -18,22 +18,30 @@ class Log implements FactoryInterface
     {
         return $this->logger;
     }
+    
+      public function __invoke(ContainerInterface $container, $requestedName, array $options = NULL)
+    {
+           $config = $container->get('Config');
+        $config = $config['cdilogger_options'];
+        $this->logger = new Log();
+        $this->configuration($config);
+        $this->writerCollection($config);
+        $this->execute();
+        return $this->logger;
+          
+      }
+    
+    
     /**
      * Create service
      *
      * @param ServiceLocatorInterface $serviceLocator
      * @return \Zend\Http\Client
      */
-    public function createService(ServiceLocatorInterface $serviceLocator)
-    {
-        $config = $serviceLocator->get('Config');
-        $config = $config['cdilogger_options'];
-        $this->logger = new Logger();
-        $this->configuration($config);
-        $this->writerCollection($config);
-        $this->execute();
-        return $this->logger;
+     public function createService(ServiceLocatorInterface $services) {
+        return $this($services, \CdiLogger\Log::class);
     }
+
     /**
      * @param array $config
      *

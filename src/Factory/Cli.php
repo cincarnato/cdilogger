@@ -3,7 +3,7 @@
 namespace CdiLogger\Factory;
 
 use Zend\Log\Filter\Priority;
-use CdiLogger\Service\Logger;
+use CdiLogger\Log;
 
 class Cli {
 
@@ -16,18 +16,22 @@ class Cli {
         return $this->logger;
     }
 
+    public function __invoke(ContainerInterface $container, $requestedName, array $options = NULL) {
+        $this->logger = new Log();
+        $this->configuration($config);
+        $this->writerCollection($config);
+        $this->execute();
+        return $this->logger;
+    }
+
     /**
      * Create service
      *
      * @param ServiceLocatorInterface $serviceLocator
      * @return \Zend\Http\Client
      */
-    public function createService(array $config) {
-        $this->logger = new Logger();
-        $this->configuration($config);
-        $this->writerCollection($config);
-        $this->execute();
-        return $this->logger;
+    public function createService(ServiceLocatorInterface $services) {
+        return $this($services, \CdiLogger\Log::class);
     }
 
     /**
@@ -42,11 +46,6 @@ class Cli {
                 if ($writer['enabled']) {
                     $this->writerAdapter($writer);
                     $writers ++;
-                    
-                      if ($writer['rotate']) {
-                          $this->logger->addRotator($writer);
-                      }
-                    
                 }
             }
             return $writers;
