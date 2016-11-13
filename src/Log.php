@@ -51,11 +51,6 @@ class Log extends AbstractLog {
         return parent::log($priority, $message, array_merge($extra, $customExtra, $this->customExtra));
     }
 
-    public static function __callStatic($method, $args) {
-        $writer = new \Zend\Log\Writer\Stream('data/logfile.txt');
-        $this->addWriter($writer);
-        return $this->log($method, $args[0]);
-    }
 
     /**
      * @param AuthenticationService $authenticationService

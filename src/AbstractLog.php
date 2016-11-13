@@ -6,6 +6,6 @@ namespace CdiLogger;
  *
  * @author Cristian Incarnato <cristian.cdi@gmail.com>
  */
-abstract  class AbstractLog extends Zend\Log\Logger{
+abstract  class AbstractLog extends \Zend\Log\Logger{
 
 }

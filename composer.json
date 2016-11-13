@@ -26,6 +26,10 @@
     "autoload": {
         "psr-4": {
             "CdiLogger\\": "src/"
-        }
+        },
+        "classmap": [
+            "./Module.php"
+        ]
+    
     }
 }

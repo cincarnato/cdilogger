@@ -23,7 +23,7 @@ return array(
                     'output' => 'data/application.log', // path to file
                 ),
                 // options: EMERG, ALERT, CRIT, ERR, WARN, NOTICE, INFO, DEBUG
-                'filter' => \Zend\Log\Logger::DEBUG,
+                'filter' => \Zend\Log\Logger::ERR,
                 'enabled' => true
             ),
             // Note: wont work on CLI with $_SERVER variable
@@ -33,8 +33,8 @@ return array(
                     'output' => 'php://output'
                 ),
                 // options: EMERG, ALERT, CRIT, ERR, WARN, NOTICE, INFO, DEBUG
-                'filter' => \Zend\Log\Logger::NOTICE,
-                'enabled' => $_SERVER['APPLICATION_ENV'] == 'development' ? true : false
+                'filter' => \Zend\Log\Logger::ERR,
+                'enabled' => true
             ),
             'standard-error' => array(
                 'adapter' => '\Zend\Log\Writer\Stream',

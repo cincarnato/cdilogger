@@ -1,9 +1,10 @@
 <?php
 namespace CdiLogger\Factory;
+
 use Zend\ServiceManager\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
 use Zend\Log\Filter\Priority;
-use CdiLogger\Log;
+use Interop\Container\ContainerInterface;
 
 
 class Log implements FactoryInterface
@@ -23,7 +24,7 @@ class Log implements FactoryInterface
     {
            $config = $container->get('Config');
         $config = $config['cdilogger_options'];
-        $this->logger = new Log();
+        $this->logger = new \CdiLogger\Log();
         $this->configuration($config);
         $this->writerCollection($config);
         $this->execute();
@@ -82,10 +83,10 @@ class Log implements FactoryInterface
     private function configuration(array $config)
     {
         if (!empty($config['registerErrorHandler'])) {
-            $config['registerErrorHandler'] === false ?: Logger::registerErrorHandler( $this->logger );
+            $config['registerErrorHandler'] === false ?: \CdiLogger\Log::registerErrorHandler( $this->logger );
         }
         if (!empty($config['registerExceptionHandler'])) {
-            $config['registerExceptionHandler'] === false ?: Logger::registerExceptionHandler( $this->logger );
+            $config['registerExceptionHandler'] === false ?: \CdiLogger\Log::registerExceptionHandler( $this->logger );
         }
     }
     /**
